@@ -3,12 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Load IPL Data (from CSVs)
+
 @st.cache_data
 def load_data():
-    matches = pd.read_csv("matches_cleaned.csv")  # Replace with your cleaned matches file
-    deliveries = pd.read_csv("deliveries_cleaned.csv")  # Replace with your cleaned deliveries file
-      # 🛠 Convert '2007/08' to 2008, '2013/14' to 2014
+    matches = pd.read_csv("matches_cleaned.csv")  
+    deliveries = pd.read_csv("deliveries_cleaned.csv")  
+    
         
     # Convert season column
     matches["season"] = matches["season"].astype(str).str.extract(r'(\d{2,4})$')[0]
@@ -64,9 +64,7 @@ if player_name:
 
 st.subheader("🏏 Search Team Squad by Year")
 
-# # Ensure seasons start from 2008
-# matches["season"] = matches["season"].astype(str).str.extract(r'(\d{4})').astype(float).astype("Int64")
-# matches = matches[matches["season"] >= 2008]  # Remove invalid seasons
+
 
 min_year = 2008
 max_year = matches["season"].max()
