@@ -266,3 +266,7 @@ with tab2:
 
 
 st.write("📊 More insights coming soon!")
+
+
+st.markdown("---")  # Adds a horizontal line
+st.write("👨‍💻 **Developed by: PJ Hemanadhan**")
