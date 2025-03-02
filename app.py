@@ -88,8 +88,8 @@ team_name_mapping = {
     "Gujarat Lions": "Gujarat Lions (2016-2017)",
     "Rising Pune Supergiant": "Rising Pune Supergiant (2016)",
     "Rising Pune Supergiants": "Rising Pune Supergiants (2017)",  # Different name for 2017
-    "Chennai Super Kings": "Chennai Super Kings (2016-2017 Suspended)",
-    "Rajasthan Royals": "Rajasthan Royals (2016-2017 Suspended)"
+    "Chennai Super Kings": "Chennai Super Kings",
+    "Rajasthan Royals": "Rajasthan Royals"
 }
 
 # Apply the team mapping to match datasets
@@ -108,8 +108,8 @@ team_matches = pd.DataFrame()
 # 🏏 Fetch players based on selected team and year
 if team and year:
     special_cases = {
-        "Chennai Super Kings (2016-2017 Suspended)": [2016, 2017],
-        "Rajasthan Royals (2016-2017 Suspended)": [2016, 2017],
+        "Chennai Super Kings": [2016, 2017],
+        "Rajasthan Royals": [2016, 2017],
         "Deccan Chargers (2008-2012)": range(2008, 2013),
         "Kings XI Punjab (2008-2020)": range(2008, 2021),
         "Punjab Kings (2021-Present)": range(2021, max_year + 1),
@@ -120,8 +120,8 @@ if team and year:
     }
 
     # Handle special cases first
-    if team in special_cases and year not in special_cases[team]:
-        st.write(f"⚠️ {team} did not play in IPL {year}.")
+    if team in special_cases and year in special_cases[team]:
+        st.write(f"⚠️ {team} did not participate in IPL {year} due to suspension.")
     else:
         team_matches = matches[(matches["season"] == year) & ((matches["team1"] == team) | (matches["team2"] == team))]
 
