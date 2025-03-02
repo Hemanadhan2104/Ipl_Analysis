@@ -75,10 +75,10 @@ max_year = matches["season"].max()
 # Year input with correct range
 year = st.number_input("Enter Year:", min_value=min_year, max_value=max_year, step=1)
 
-# Standardized team names (including historical teams)
+# Standardized team names (with correct IPL history)
 team_name_mapping = {
-    "Delhi Daredevils": "Delhi Daredevils (2008-2020)",
-    "Delhi Capitals": "Delhi Capitals (2021-Present)",
+    "Delhi Daredevils": "Delhi Daredevils (2008-2018)",
+    "Delhi Capitals": "Delhi Capitals (2019-Present)",
     "Royal Challengers Bangalore": "Royal Challengers Bengaluru",
     "Deccan Chargers": "Deccan Chargers (2008-2012)",
     "Kings XI Punjab": "Kings XI Punjab (2008-2020)",
@@ -88,17 +88,17 @@ team_name_mapping = {
     "Gujarat Lions": "Gujarat Lions (2016-2017)",
     "Rising Pune Supergiant": "Rising Pune Supergiant (2016)",
     "Rising Pune Supergiants": "Rising Pune Supergiants (2017)",  # Different name for 2017
-    "Chennai Super Kings": "Chennai Super Kings",
-    "Rajasthan Royals": "Rajasthan Royals"
+    "Chennai Super Kings": "Chennai Super Kings (2016-2017 Suspended)",
+    "Rajasthan Royals": "Rajasthan Royals (2016-2017 Suspended)"
 }
 
-# Apply the team mapping to match datasets
+# Apply the team mapping
 matches["team1"] = matches["team1"].replace(team_name_mapping)
 matches["team2"] = matches["team2"].replace(team_name_mapping)
 deliveries["batting_team"] = deliveries["batting_team"].replace(team_name_mapping)
 deliveries["bowling_team"] = deliveries["bowling_team"].replace(team_name_mapping)
 
-# Dropdown with all teams
+# Dropdown with all valid teams
 teams = sorted(set(matches["team1"]).union(set(matches["team2"])))
 team = st.selectbox("Select Team:", teams)
 
@@ -108,20 +108,20 @@ team_matches = pd.DataFrame()
 # 🏏 Fetch players based on selected team and year
 if team and year:
     special_cases = {
-        "Chennai Super Kings": [2016, 2017],
-        "Rajasthan Royals": [2016, 2017],
-        "Deccan Chargers (2008-2012)": range(2008, 2013),
-        "Kings XI Punjab (2008-2020)": range(2008, 2021),
-        "Punjab Kings (2021-Present)": range(2021, max_year + 1),
-        "Delhi Daredevils (2008-2020)": range(2008, 2021),
-        "Delhi Capitals (2021-Present)": range(2021, max_year + 1),
-        "Rising Pune Supergiant (2016)": [2016],
-        "Rising Pune Supergiants (2017)": [2017],
+        "Chennai Super Kings (2016-2017 Suspended)": [2016, 2017],
+        "Rajasthan Royals (2016-2017 Suspended)": [2016, 2017],
+        "Deccan Chargers (2008-2012)": list(range(2008, 2013)),
+        "Kings XI Punjab (2008-2020)": list(range(2008, 2021)),  
+        "Punjab Kings (2021-Present)": list(range(2021, max_year + 1)),  
+        "Delhi Daredevils (2008-2018)": list(range(2008, 2019)),  
+        "Delhi Capitals (2019-Present)": list(range(2019, max_year + 1)),  
+        "Rising Pune Supergiant (2016)": [2016],  
+        "Rising Pune Supergiants (2017)": [2017],  
     }
 
-    # Handle special cases first
-    if team in special_cases and year in special_cases[team]:
-        st.write(f"⚠️ {team} did not participate in IPL {year} due to suspension.")
+    # Prevent teams from appearing in years they didn't play
+    if team in special_cases and year not in special_cases[team]:
+        st.write(f"⚠️ {team} did not play in IPL {year}.")
     else:
         team_matches = matches[(matches["season"] == year) & ((matches["team1"] == team) | (matches["team2"] == team))]
 
@@ -143,6 +143,7 @@ if not team_matches.empty:
         st.write(f"⚠️ No squad data available for {team} in {year}!")
 else:
     st.write(f"⚠️ No matches found for {team} in {year}.")
+
 # 1️⃣ Most Successful Teams (By Wins)
 st.subheader("🏆 Most Successful IPL Teams")
 team_wins = matches[matches["winner"] != "No Result"]["winner"].value_counts()
