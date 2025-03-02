@@ -129,7 +129,6 @@ if team and year:
                 st.write(f"⚠️ No squad data available for {team} in {year}!")
         else:
             st.write(f"⚠️ No matches found for {team} in {year}.")
-
 # 1️⃣ Most Successful Teams (By Wins)
 st.subheader("🏆 Most Successful IPL Teams")
 team_wins = matches[matches["winner"] != "No Result"]["winner"].value_counts()
