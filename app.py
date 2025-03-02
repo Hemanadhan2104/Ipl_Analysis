@@ -84,8 +84,8 @@ team_name_mapping = {
     "Pune Warriors India": "Pune Warriors India (2011-2013)",
     "Gujarat Lions": "Gujarat Lions (2016-2017)",
     "Rising Pune Supergiants": "Rising Pune Supergiants (2016-2017)",
-    "Chennai Super Kings": "Chennai Super Kings (\u274c 2016-2017 Suspended)",
-    "Rajasthan Royals": "Rajasthan Royals (\u274c 2016-2017 Suspended)"
+    "Chennai Super Kings": "Chennai Super Kings (2016-2017 Suspended)",
+    "Rajasthan Royals": "Rajasthan Royals (2016-2017 Suspended)"
 }
 
 # Apply the team mapping to match datasets
@@ -100,12 +100,19 @@ team = st.selectbox("Select Team:", teams)
 
 # 🏏 Fetch players based on selected team and year
 if team and year:
-    # Exclude CSK and RR for 2016-2017
-    if team.startswith("Chennai Super Kings") or team.startswith("Rajasthan Royals"):
-        if year in [2016, 2017]:
-            st.write(f"⚠️ {team} did not participate in IPL {year} due to suspension.")
-        else:
-            team_matches = matches[(matches["season"] == year) & ((matches["team1"] == team) | (matches["team2"] == team))]
+    if (team == "Chennai Super Kings (2016-2017 Suspended)" or 
+        team == "Rajasthan Royals (2016-2017 Suspended)") and year in [2016, 2017]:
+        st.write(f"⚠️ {team} did not participate in IPL {year} due to suspension.")
+    elif team == "Deccan Chargers (2008-2012)" and (year < 2008 or year > 2012):
+        st.write("⚠️ Deccan Chargers played only between 2008 and 2012.")
+    elif team == "Kings XI Punjab (2008-2020)" and year > 2020:
+        st.write("⚠️ Kings XI Punjab was rebranded as Punjab Kings from 2021 onward.")
+    elif team == "Punjab Kings (2021-Present)" and year < 2021:
+        st.write("⚠️ Punjab Kings was known as Kings XI Punjab before 2021.")
+    elif team == "Delhi Daredevils (2008-2020)" and year > 2020:
+        st.write("⚠️ Delhi Daredevils was rebranded as Delhi Capitals from 2021 onward.")
+    elif team == "Delhi Capitals (2021-Present)" and year < 2021:
+        st.write("⚠️ Delhi Capitals was known as Delhi Daredevils before 2021.")
     else:
         team_matches = matches[(matches["season"] == year) & ((matches["team1"] == team) | (matches["team2"] == team))]
 
