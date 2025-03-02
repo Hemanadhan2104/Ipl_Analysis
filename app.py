@@ -94,6 +94,7 @@ deliveries["bowling_team"] = deliveries["bowling_team"].replace(team_name_mappin
 teams = sorted(set(matches["team1"]).union(set(matches["team2"])))
 team = st.selectbox("Select Team:", teams)
 
+# Allowed years for each team
 special_cases = {
     "Chennai Super Kings": list(range(2008, 2016)) + list(range(2018, max_year + 1)),  
     "Rajasthan Royals": list(range(2008, 2016)) + list(range(2018, max_year + 1)),  
@@ -112,23 +113,22 @@ if team and year:
         st.write(f"⚠️ {team} did not play in IPL {year}.")
     else:
         team_matches = matches[(matches["season"] == year) & ((matches["team1"] == team) | (matches["team2"] == team))]
+        
+        if not team_matches.empty:
+            team_deliveries = deliveries[deliveries["match_id"].isin(team_matches["id"])]
 
-if not team_matches.empty:
-    team_deliveries = deliveries[deliveries["match_id"].isin(team_matches["id"])]
+            team_batters = team_deliveries[team_deliveries["batting_team"] == team]["batter"].dropna().unique()
+            team_bowlers = team_deliveries[team_deliveries["bowling_team"] == team]["bowler"].dropna().unique()
 
-    team_batters = team_deliveries[team_deliveries["batting_team"] == team]["batter"].dropna().unique()
-    team_bowlers = team_deliveries[team_deliveries["bowling_team"] == team]["bowler"].dropna().unique()
+            unique_players = sorted(set(team_batters).union(set(team_bowlers)))
 
-    unique_players = sorted(set(team_batters).union(set(team_bowlers)))
-
-    if unique_players:
-        st.write(f"### 🏏 {team} Squad in {year}")
-        st.write(", ".join(unique_players))
-    else:
-        st.write(f"⚠️ No squad data available for {team} in {year}!")
-else:
-    st.write(f"⚠️ No matches found for {team} in {year}.")
-
+            if unique_players:
+                st.write(f"### 🏏 {team} Squad in {year}")
+                st.write(", ".join(unique_players))
+            else:
+                st.write(f"⚠️ No squad data available for {team} in {year}!")
+        else:
+            st.write(f"⚠️ No matches found for {team} in {year}.")
 
 # 1️⃣ Most Successful Teams (By Wins)
 st.subheader("🏆 Most Successful IPL Teams")
