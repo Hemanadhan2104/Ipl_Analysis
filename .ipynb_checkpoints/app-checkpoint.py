@@ -122,6 +122,7 @@ if team and year:
         team_matches = matches[(matches["season"] == year) & ((matches["team1"] == team) | (matches["team2"] == team))]
 
     # Filter deliveries for those matches
+if not team_matches.empty:
     team_deliveries = deliveries[deliveries["match_id"].isin(team_matches["id"])]
 
     # Get unique players who either batted or bowled for the selected team
@@ -136,6 +137,8 @@ if team and year:
         st.write(", ".join(unique_players))  # Display players in a readable format
     else:
         st.write(f"⚠️ No squad data available for {team} in {year}!")
+else:
+     st.write(f"⚠️ No matches found for {team} in {year}.")
 
 # 1️⃣ Most Successful Teams (By Wins)
 st.subheader("🏆 Most Successful IPL Teams")
