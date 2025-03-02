@@ -30,41 +30,59 @@ matches, deliveries = load_data()
 # 🏏 Streamlit Dashboard UI
 st.title("🏏 IPL Data Analysis Dashboard")
 # 🎛️ Interactive Player Search (Case-Insensitive + Runs + Wickets)
-st.subheader("🔎 Search Player Stats")
-player_name = st.text_input("Enter player name:").strip().lower()
+# st.subheader("🔎 Search Player Stats")
 
-if player_name:
-    # Case-Insensitive Search
-    player_stats = deliveries[deliveries["batter"].str.lower() == player_name]
-    bowler_stats = deliveries[deliveries["bowler"].str.lower() == player_name]
+# Get unique player names
+unique_players = sorted(set(deliveries["batter"].dropna()).union(set(deliveries["bowler"].dropna())))
+
+# # Text input for player search
+# search_input = st.text_input("Enter player name:").strip().lower()
+
+# Auto-suggestion: Filter player names
+# suggested_players = [name for name in unique_players if search_input in name.lower()] if search_input else unique_players
+
+# Selectbox for player selection with filtered suggestions
+# selected_player = st.selectbox("Select Player:", suggested_players, index=0 if suggested_players else None)
+st.subheader("🔎 Search Player Stats")
+
+# Get unique player names
+# unique_players = sorted(set(deliveries["batter"].dropna()).union(set(deliveries["bowler"].dropna())))
+
+# Selectbox for player selection with auto-suggestions
+selected_player = st.selectbox("Select Player:", unique_players)
+
+
+# If player selected, show stats
+if selected_player:
+    st.write(f"### 🏏 {selected_player}'s Performance")
+
+    # Filter player data
+    player_stats = deliveries[deliveries["batter"] == selected_player]
+    bowler_stats = deliveries[deliveries["bowler"] == selected_player]
 
     if not player_stats.empty:
-        batting_summary = player_stats.groupby("batter").agg(
+        batting_summary = player_stats.groupby("season").agg(
             total_runs=pd.NamedAgg(column="batsman_runs", aggfunc="sum"),
             total_balls=pd.NamedAgg(column="ball", aggfunc="count"),
             matches=pd.NamedAgg(column="match_id", aggfunc="nunique")
         ).reset_index()
         batting_summary["strike_rate"] = (batting_summary["total_runs"] / batting_summary["total_balls"] * 100).round(2)
 
-        st.write(f"### 🏏 {player_name.title()}'s Batting Stats")
+        st.write("### 🏏 Batting Performance by Year")
         st.write(batting_summary)
 
     if not bowler_stats.empty:
         wicket_deliveries = bowler_stats[
             bowler_stats["dismissal_kind"].isin(["bowled", "caught", "lbw", "stumped", "caught and bowled", "hit wicket"])
         ]
-        bowling_summary = wicket_deliveries.groupby("bowler")["player_dismissed"].count().reset_index()
+        bowling_summary = wicket_deliveries.groupby("season")["player_dismissed"].count().reset_index()
         bowling_summary.rename(columns={"player_dismissed": "wickets"}, inplace=True)
 
-        st.write(f"### 🎯 {player_name.title()}'s Bowling Stats")
+        st.write("### 🎯 Bowling Performance by Year")
         st.write(bowling_summary)
 
     if player_stats.empty and bowler_stats.empty:
-        st.write("⚠️ Player not found in dataset!")
-
-
-
-
+        st.write("⚠️ No data available for this player!")
 st.subheader("🏏 Search Team Squad by Year")
 
 min_year = 2008
