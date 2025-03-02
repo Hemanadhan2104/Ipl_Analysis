@@ -71,8 +71,8 @@ max_year = matches["season"].max()
 year = st.number_input("Enter Year:", min_value=min_year, max_value=max_year, step=1)
 
 team_name_mapping = {
-    "Delhi Daredevils": "Delhi Daredevils (2008-2018)",
-    "Delhi Capitals": "Delhi Capitals (2019-Present)",
+    # "Delhi Daredevils": "Delhi Daredevils (2008-2018)",
+    "Delhi Capitals": "Delhi Capitals ",
     "Royal Challengers Bangalore": "Royal Challengers Bengaluru",
     "Deccan Chargers": "Deccan Chargers (2008-2012)",
     "Kings XI Punjab": "Kings XI Punjab (2008-2020)",
@@ -104,7 +104,7 @@ special_cases = {
     "Kings XI Punjab (2008-2020)": list(range(2008, 2021)),
     "Punjab Kings (2021-Present)": list(range(2021, max_year + 1)),
     # "Delhi Daredevils (2008-2018)": list(range(2008, 2019)),
-    "Delhi Capitals (2019-Present)": list(range(2008, max_year + 1)),
+    "Delhi Capitals ": list(range(2008, max_year + 1)),
     "Rising Pune Supergiant (2016-2017)": [2016, 2017],
     "Pune Warriors India (2011-2013)": list(range(2011, 2014)),
 }
