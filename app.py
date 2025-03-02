@@ -74,16 +74,18 @@ year = st.number_input("Enter Year:", min_value=min_year, max_value=max_year, st
 
 # Standardized team names (including historical teams)
 team_name_mapping = {
-    "Delhi Daredevils": "Delhi Capitals (2008-2018)",
+    "Delhi Daredevils": "Delhi Daredevils (2008-2020)",
+    "Delhi Capitals": "Delhi Capitals (2021-Present)",
     "Royal Challengers Bangalore": "Royal Challengers Bengaluru",
     "Deccan Chargers": "Deccan Chargers (2008-2012)",
-    "Kings XI Punjab": "Punjab Kings (2008-2020)",
+    "Kings XI Punjab": "Kings XI Punjab (2008-2020)",
+    "Punjab Kings": "Punjab Kings (2021-Present)",
     "Kochi Tuskers Kerala": "Kochi Tuskers Kerala (2011)",
     "Pune Warriors India": "Pune Warriors India (2011-2013)",
     "Gujarat Lions": "Gujarat Lions (2016-2017)",
     "Rising Pune Supergiants": "Rising Pune Supergiants (2016-2017)",
-    "Chennai Super Kings": "Chennai Super Kings (❌ 2016-2017 Suspended)",
-    "Rajasthan Royals": "Rajasthan Royals (❌ 2016-2017 Suspended)"
+    "Chennai Super Kings": "Chennai Super Kings (\u274c 2016-2017 Suspended)",
+    "Rajasthan Royals": "Rajasthan Royals (\u274c 2016-2017 Suspended)"
 }
 
 # Apply the team mapping to match datasets
