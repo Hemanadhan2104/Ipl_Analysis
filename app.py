@@ -103,8 +103,8 @@ special_cases = {
     "Deccan Chargers (2008-2012)": list(range(2008, 2013)),
     "Kings XI Punjab (2008-2020)": list(range(2008, 2021)),
     "Punjab Kings (2021-Present)": list(range(2021, max_year + 1)),
-    "Delhi Daredevils (2008-2018)": list(range(2008, 2019)),
-    "Delhi Capitals (2019-Present)": list(range(2019, max_year + 1)),
+    # "Delhi Daredevils (2008-2018)": list(range(2008, 2019)),
+    "Delhi Capitals (2019-Present)": list(range(2008, max_year + 1)),
     "Rising Pune Supergiant (2016-2017)": [2016, 2017],
     "Pune Warriors India (2011-2013)": list(range(2011, 2014)),
 }
