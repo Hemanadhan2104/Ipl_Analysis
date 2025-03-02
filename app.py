@@ -19,6 +19,8 @@ def load_data():
     # Convert 2-digit years to 4-digit
     matches["season"] = matches["season"].apply(lambda x: x + 2000 if x < 100 else x)
 
+    
+
     deliveries = deliveries.merge(matches[["id", "season"]], left_on="match_id", right_on="id", how="left")
 
     return matches, deliveries
@@ -70,9 +72,10 @@ max_year = matches["season"].max()
 
 year = st.number_input("Enter Year:", min_value=min_year, max_value=max_year, step=1)
 
+# Team Name Mapping
 team_name_mapping = {
-    # "Delhi Daredevils": "Delhi Daredevils (2008-2018)",
-    "Delhi Capitals": "Delhi Capitals ",
+    "Delhi Daredevils": "Delhi Capitals (2008-Present)",
+    "Delhi Capitals": "Delhi Capitals (2008-Present)",
     "Royal Challengers Bangalore": "Royal Challengers Bengaluru",
     "Deccan Chargers": "Deccan Chargers (2008-2012)",
     "Kings XI Punjab": "Kings XI Punjab (2008-2020)",
@@ -80,12 +83,15 @@ team_name_mapping = {
     "Kochi Tuskers Kerala": "Kochi Tuskers Kerala (2011)",
     "Pune Warriors": "Pune Warriors India (2011-2013)",
     "Gujarat Lions": "Gujarat Lions (2016-2017)",
-    "Rising Pune Supergiant": "Rising Pune Supergiant (2016-2017)",
+    # "Rising Pune Supergiants": "Rising Pune Supergiant (2016-2017)"
+     "Rising Pune Supergiants": "Rising Pune Supergiants (2016-2017)",
+    "Rising Pune Supergiant": "Rising Pune Supergiants (2016-2017)",  # Handling both versions
+
     "Chennai Super Kings": "Chennai Super Kings",
     "Rajasthan Royals": "Rajasthan Royals"
 }
 
-# Apply mapping
+# Apply team name mapping
 matches["team1"] = matches["team1"].replace(team_name_mapping)
 matches["team2"] = matches["team2"].replace(team_name_mapping)
 deliveries["batting_team"] = deliveries["batting_team"].replace(team_name_mapping)
@@ -96,20 +102,19 @@ teams = sorted(set(matches["team1"]).union(set(matches["team2"])))
 
 team = st.selectbox("Select Team:", teams)
 
-# Correct special cases with precise years
+# Special Cases for teams that existed only in certain years
 special_cases = {
     "Chennai Super Kings": list(range(2008, 2016)) + list(range(2018, max_year + 1)),
     "Rajasthan Royals": list(range(2008, 2016)) + list(range(2018, max_year + 1)),
     "Deccan Chargers (2008-2012)": list(range(2008, 2013)),
     "Kings XI Punjab (2008-2020)": list(range(2008, 2021)),
     "Punjab Kings (2021-Present)": list(range(2021, max_year + 1)),
-    # "Delhi Daredevils (2008-2018)": list(range(2008, 2019)),
-    "Delhi Capitals ": list(range(2008, max_year + 1)),
+    "Delhi Capitals (2008-Present)": list(range(2008, max_year + 1)),  # Merged Delhi teams
     "Rising Pune Supergiant (2016-2017)": [2016, 2017],
     "Pune Warriors India (2011-2013)": list(range(2011, 2014)),
 }
 
-# Show warning if team did not exist in selected year
+# Show warning if team did not exist in the selected year
 if team and year:
     if team in special_cases and year not in special_cases[team]:
         st.write(f"⚠️ {team} did not play in IPL {year}.")
@@ -131,6 +136,7 @@ if team and year:
                 st.write(f"⚠️ No squad data available for {team} in {year}!")
         else:
             st.write(f"⚠️ No matches found for {team} in {year}.")
+
 
 # 1️⃣ Most Successful Teams (By Wins)
 st.subheader("🏆 Most Successful IPL Teams")
