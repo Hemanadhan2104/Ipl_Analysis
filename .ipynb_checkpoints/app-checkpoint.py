@@ -62,9 +62,12 @@ if player_name:
 
 
 
+
 st.subheader("🏏 Search Team Squad by Year")
 
-
+# Load your data (assuming matches & deliveries are DataFrames)
+# matches = pd.read_csv("matches.csv")
+# deliveries = pd.read_csv("deliveries.csv")
 
 min_year = 2008
 max_year = matches["season"].max()
@@ -99,29 +102,30 @@ deliveries["bowling_team"] = deliveries["bowling_team"].replace(team_name_mappin
 teams = sorted(set(matches["team1"]).union(set(matches["team2"])))
 team = st.selectbox("Select Team:", teams)
 
+# Initialize an empty DataFrame to prevent NameError
+team_matches = pd.DataFrame()
+
 # 🏏 Fetch players based on selected team and year
 if team and year:
-    if (team == "Chennai Super Kings (2016-2017 Suspended)" or 
-        team == "Rajasthan Royals (2016-2017 Suspended)") and year in [2016, 2017]:
-        st.write(f"⚠️ {team} did not participate in IPL {year} due to suspension.")
-    elif team == "Deccan Chargers (2008-2012)" and (year < 2008 or year > 2012):
-        st.write("⚠️ Deccan Chargers played only between 2008 and 2012.")
-    elif team == "Kings XI Punjab (2008-2020)" and year > 2020:
-        st.write("⚠️ Kings XI Punjab was rebranded as Punjab Kings from 2021 onward.")
-    elif team == "Punjab Kings (2021-Present)" and year < 2021:
-        st.write("⚠️ Punjab Kings was known as Kings XI Punjab before 2021.")
-    elif team == "Delhi Daredevils (2008-2020)" and year > 2020:
-        st.write("⚠️ Delhi Daredevils was rebranded as Delhi Capitals from 2021 onward.")
-    elif team == "Delhi Capitals (2021-Present)" and year < 2021:
-        st.write("⚠️ Delhi Capitals was known as Delhi Daredevils before 2021.")
-    elif team == "Rising Pune Supergiant (2016)" and year != 2016:
-        st.write("⚠️ Rising Pune Supergiant only played in 2016.")
-    elif team == "Rising Pune Supergiants (2017)" and year != 2017:
-        st.write("⚠️ Rising Pune Supergiants only played in 2017.")
+    special_cases = {
+        "Chennai Super Kings (2016-2017 Suspended)": [2016, 2017],
+        "Rajasthan Royals (2016-2017 Suspended)": [2016, 2017],
+        "Deccan Chargers (2008-2012)": range(2008, 2013),
+        "Kings XI Punjab (2008-2020)": range(2008, 2021),
+        "Punjab Kings (2021-Present)": range(2021, max_year + 1),
+        "Delhi Daredevils (2008-2020)": range(2008, 2021),
+        "Delhi Capitals (2021-Present)": range(2021, max_year + 1),
+        "Rising Pune Supergiant (2016)": [2016],
+        "Rising Pune Supergiants (2017)": [2017],
+    }
+
+    # Handle special cases first
+    if team in special_cases and year not in special_cases[team]:
+        st.write(f"⚠️ {team} did not play in IPL {year}.")
     else:
         team_matches = matches[(matches["season"] == year) & ((matches["team1"] == team) | (matches["team2"] == team))]
 
-    # Filter deliveries for those matches
+# Ensure team_matches is not empty before proceeding
 if not team_matches.empty:
     team_deliveries = deliveries[deliveries["match_id"].isin(team_matches["id"])]
 
@@ -138,8 +142,7 @@ if not team_matches.empty:
     else:
         st.write(f"⚠️ No squad data available for {team} in {year}!")
 else:
-     st.write(f"⚠️ No matches found for {team} in {year}.")
-
+    st.write(f"⚠️ No matches found for {team} in {year}.")
 # 1️⃣ Most Successful Teams (By Wins)
 st.subheader("🏆 Most Successful IPL Teams")
 team_wins = matches[matches["winner"] != "No Result"]["winner"].value_counts()
