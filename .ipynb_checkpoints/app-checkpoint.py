@@ -83,7 +83,8 @@ team_name_mapping = {
     "Kochi Tuskers Kerala": "Kochi Tuskers Kerala (2011)",
     "Pune Warriors India": "Pune Warriors India (2011-2013)",
     "Gujarat Lions": "Gujarat Lions (2016-2017)",
-    "Rising Pune Supergiants": "Rising Pune Supergiants (2016-2017)",
+    "Rising Pune Supergiant": "Rising Pune Supergiant (2016)",
+    "Rising Pune Supergiants": "Rising Pune Supergiants (2017)",  # Different name for 2017
     "Chennai Super Kings": "Chennai Super Kings (2016-2017 Suspended)",
     "Rajasthan Royals": "Rajasthan Royals (2016-2017 Suspended)"
 }
@@ -113,6 +114,10 @@ if team and year:
         st.write("⚠️ Delhi Daredevils was rebranded as Delhi Capitals from 2021 onward.")
     elif team == "Delhi Capitals (2021-Present)" and year < 2021:
         st.write("⚠️ Delhi Capitals was known as Delhi Daredevils before 2021.")
+    elif team == "Rising Pune Supergiant (2016)" and year != 2016:
+        st.write("⚠️ Rising Pune Supergiant only played in 2016.")
+    elif team == "Rising Pune Supergiants (2017)" and year != 2017:
+        st.write("⚠️ Rising Pune Supergiants only played in 2017.")
     else:
         team_matches = matches[(matches["season"] == year) & ((matches["team1"] == team) | (matches["team2"] == team))]
 
