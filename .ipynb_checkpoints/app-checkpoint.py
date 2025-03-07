@@ -27,7 +27,6 @@ def load_data():
 
 matches, deliveries = load_data()
 
-# 🏏 Streamlit Dashboard UI
 st.title("🏏 IPL Data Analysis Dashboard")
 # 🎛️ Interactive Player Search (Case-Insensitive + Runs + Wickets)
 # st.subheader("🔎 Search Player Stats")
@@ -52,7 +51,6 @@ st.subheader("🔎 Search Player Stats")
 selected_player = st.selectbox("Select Player:", unique_players)
 
 
-# If player selected, show stats
 if selected_player:
     st.write(f"### 🏏 {selected_player}'s Performance")
 
@@ -103,36 +101,33 @@ team_name_mapping = {
     "Gujarat Lions": "Gujarat Lions (2016-2017)",
     # "Rising Pune Supergiants": "Rising Pune Supergiant (2016-2017)"
      "Rising Pune Supergiants": "Rising Pune Supergiants (2016-2017)",
-    "Rising Pune Supergiant": "Rising Pune Supergiants (2016-2017)",  # Handling both versions
+    "Rising Pune Supergiant": "Rising Pune Supergiants (2016-2017)", 
 
     "Chennai Super Kings": "Chennai Super Kings",
     "Rajasthan Royals": "Rajasthan Royals"
 }
 
-# Apply team name mapping
 matches["team1"] = matches["team1"].replace(team_name_mapping)
 matches["team2"] = matches["team2"].replace(team_name_mapping)
 deliveries["batting_team"] = deliveries["batting_team"].replace(team_name_mapping)
 deliveries["bowling_team"] = deliveries["bowling_team"].replace(team_name_mapping)
 
-# Update the set of teams after mapping
 teams = sorted(set(matches["team1"]).union(set(matches["team2"])))
 
 team = st.selectbox("Select Team:", teams)
 
-# Special Cases for teams that existed only in certain years
 special_cases = {
     "Chennai Super Kings": list(range(2008, 2016)) + list(range(2018, max_year + 1)),
     "Rajasthan Royals": list(range(2008, 2016)) + list(range(2018, max_year + 1)),
     "Deccan Chargers (2008-2012)": list(range(2008, 2013)),
     "Kings XI Punjab (2008-2020)": list(range(2008, 2021)),
     "Punjab Kings (2021-Present)": list(range(2021, max_year + 1)),
-    "Delhi Capitals (2008-Present)": list(range(2008, max_year + 1)),  # Merged Delhi teams
+    "Delhi Capitals (2008-Present)": list(range(2008, max_year + 1)),  
     "Rising Pune Supergiant (2016-2017)": [2016, 2017],
     "Pune Warriors India (2011-2013)": list(range(2011, 2014)),
 }
 
-# Show warning if team did not exist in the selected year
+
 if team and year:
     if team in special_cases and year not in special_cases[team]:
         st.write(f"⚠️ {team} did not play in IPL {year}.")
@@ -156,7 +151,7 @@ if team and year:
             st.write(f"⚠️ No matches found for {team} in {year}.")
 
 
-# 1️⃣ Most Successful Teams (By Wins)
+
 st.subheader("🏆 Most Successful IPL Teams")
 team_wins = matches[matches["winner"] != "No Result"]["winner"].value_counts()
 
@@ -166,17 +161,17 @@ ax.set_xlabel("Total Wins")
 ax.set_ylabel("Teams")
 ax.set_title("Most Successful IPL Teams")
 
-# Add labels
+
 for index, value in enumerate(team_wins.values):
     ax.text(value + 2, index, str(value), va='center', fontsize=12)
 
 st.pyplot(fig)
 
 
-# Create tabs
+
 tab1, tab2 = st.tabs(["Top 10 Batsmen (By Runs)", "Highest Partnerships (By Runs)"])
 
-# 🏏 Top 10 IPL Batsmen by Runs
+
 with tab1:
     st.subheader("🏏 Top 10 IPL Batsmen by Runs")
     
@@ -195,7 +190,7 @@ with tab1:
 
     st.pyplot(fig)
 
-# 🤝 Highest IPL Partnerships by Runs
+
 with tab2:
     st.subheader("🤝 Highest IPL Partnerships by Runs")
 
@@ -217,11 +212,11 @@ with tab2:
 
     st.pyplot(fig)
     
-# Create tabs
+
 tab1, tab2, tab3= st.tabs(["Top 10 Bowlers (By Wickets)", "Best Economy Bowlers (Min 50 Overs)",
     "Death Bowlers"])
 
-# 🎯 Top 10 IPL Bowlers by Wickets
+
 with tab1:
     st.subheader("🎯 Top 10 IPL Bowlers by Wickets")
     
@@ -245,7 +240,7 @@ with tab1:
 
     st.pyplot(fig)
 
-# 💰 Best Economy Rate Bowlers (Min 50 Overs)
+
 with tab2:
     st.subheader("💰 Best Economy Rate Bowlers (Min 50 Overs)")
 
@@ -276,7 +271,7 @@ with tab3:
     death_bowlers_count = death_bowlers["bowler"].value_counts().head(10)
     st.bar_chart(death_bowlers_count)
 
-# 1️⃣ Win Percentage of Teams Over the Years
+
 tab1, tab2 = st.tabs([
      "Most Impactful Players", "Most Sixes"
 ])
