@@ -4,6 +4,19 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
+# Hide Streamlit's default menu and GitHub link
+st.markdown(
+    """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 @st.cache_data
 def load_data():
     matches = pd.read_csv("matches_cleaned.csv")  
